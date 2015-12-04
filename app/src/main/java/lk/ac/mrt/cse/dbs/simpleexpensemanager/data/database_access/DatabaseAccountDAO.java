@@ -6,11 +6,19 @@ import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.AccountDAO;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.exception.InvalidAccountException;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.Account;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.ExpenseType;
+import lk.ac.mrt.cse.dbs.simpleexpensemanager.database.MyDBHandler;
 
 /**
  * Created by KeetMalin on 12/4/2015.
  */
 public class DatabaseAccountDAO implements AccountDAO {
+
+    MyDBHandler dbHandler = null;
+
+    public DatabaseAccountDAO(MyDBHandler dbHandler){
+        this.dbHandler = dbHandler;
+
+    }
     @Override
     public List<String> getAccountNumbersList() {
         return null;

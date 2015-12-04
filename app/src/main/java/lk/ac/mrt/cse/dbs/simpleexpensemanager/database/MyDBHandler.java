@@ -27,8 +27,16 @@ public class MyDBHandler extends SQLiteOpenHelper {
     public static final String COLUMN_AMOUNT = "amount";
 
 
-    public MyDBHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, DATABASE_NAME, factory, DATABASE_VERSION);
+    private static MyDBHandler instance = null;
+    public MyDBHandler getInstance(Context context)
+    {
+        if(instance == null)
+            instance = new MyDBHandler(context);
+        return instance;
+    }
+
+    public MyDBHandler(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
