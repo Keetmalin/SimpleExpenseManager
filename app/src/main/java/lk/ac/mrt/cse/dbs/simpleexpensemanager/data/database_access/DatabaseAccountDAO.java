@@ -1,5 +1,8 @@
 package lk.ac.mrt.cse.dbs.simpleexpensemanager.data.database_access;
 
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
+
 import java.util.List;
 
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.AccountDAO;
@@ -26,6 +29,7 @@ public class DatabaseAccountDAO implements AccountDAO {
 
     @Override
     public List<Account> getAccountsList() {
+
         return null;
     }
 
@@ -36,7 +40,16 @@ public class DatabaseAccountDAO implements AccountDAO {
 
     @Override
     public void addAccount(Account account) {
+        ContentValues values = new ContentValues();
+        values.put(MyDBHandler.COLUMN_ACCOUNT_NO1, account.getAccountNo());
+        values.put(MyDBHandler.COLUMN_BANK_NAME , account.getBankName());
+        values.put(MyDBHandler.COLUMN_ACCOUNT_HOLDER_NAME , account.getAccountHolderName());
+        values.put(MyDBHandler.COLUMN_BALANCE, account.getBalance());
 
+        SQLiteDatabase db = dbHandler.getWritableDatabase();
+
+        db.insert(MyDBHandler.TABLE_ACCOUNT, null, values);
+        db.close();
     }
 
     @Override

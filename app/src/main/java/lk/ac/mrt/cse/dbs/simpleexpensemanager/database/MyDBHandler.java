@@ -13,14 +13,14 @@ public class MyDBHandler extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "130581H.db";
 
     //required variables for Table ACCOUNT
-    private static final String TABLE_ACCOUNT = "account";
+    public static final String TABLE_ACCOUNT = "account";
     public static final String COLUMN_ACCOUNT_NO1 = "accountNo";
     public static final String COLUMN_BANK_NAME = "bankName";
     public static final String COLUMN_ACCOUNT_HOLDER_NAME = "accountHolderName";
     public static final String COLUMN_BALANCE = "balance";
 
     //required variables for table TRANSACTION
-    private static final String TABLE_TRANSACTION = "transaction";
+    public static final String TABLE_TRANSACTION = "transaction";
     public static final String COLUMN_DATE = "date";
     public static final String COLUMN_ACCOUNT_NO2 = "accountNo";
     public static final String COLUMN_EXPENSE_TYPE = "expenseType";
@@ -48,7 +48,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
         String CREATE_TRANSACTION_TABLE = "CREATE TABLE " + TABLE_TRANSACTION + "("
                 + COLUMN_ACCOUNT_NO2 + " VARCHAR(6) PRIMARY KEY," + COLUMN_DATE
-                + " DATE," + COLUMN_EXPENSE_TYPE + " VARACHAR(10)" + COLUMN_AMOUNT + " DOUBLE" + ")";
+                + " DATE," + COLUMN_EXPENSE_TYPE + " VARACHAR(10)" + COLUMN_AMOUNT + " DOUBLE" + " , )";
 
         //execute table creation sql queries
         db.execSQL(CREATE_ACCOUNT_TABLE);
@@ -62,4 +62,10 @@ public class MyDBHandler extends SQLiteOpenHelper {
         onCreate(db);
 
     }
+
+    public  SQLiteDatabase getWritableDatabase(){
+        return this.getWritableDatabase();
+    }
+
+
 }

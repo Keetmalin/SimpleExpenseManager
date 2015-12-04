@@ -1,5 +1,8 @@
 package lk.ac.mrt.cse.dbs.simpleexpensemanager.data.database_access;
 
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
+
 import java.util.Date;
 import java.util.List;
 
@@ -21,6 +24,17 @@ public class DatabaseTransactionDAO implements TransactionDAO{
 
     @Override
     public void logTransaction(Date date, String accountNo, ExpenseType expenseType, double amount) {
+        Transaction transaction = new Transaction(date, accountNo, expenseType, amount);
+        ContentValues values = new ContentValues();
+        values.put(MyDBHandler.COLUMN_ACCOUNT_NO2, account.getAccountNo());
+        values.put(MyDBHandler.COLUMN_BANK_NAME , account.getBankName());
+        values.put(MyDBHandler.COLUMN_ACCOUNT_HOLDER_NAME , account.getAccountHolderName());
+        values.put(MyDBHandler.COLUMN_BALANCE, account.getBalance());
+
+        SQLiteDatabase db = dbHandler.getWritableDatabase();
+
+        db.insert(MyDBHandler.TABLE_ACCOUNT, null, values);
+        db.close();
 
     }
 
