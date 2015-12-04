@@ -44,11 +44,11 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
         String CREATE_ACCOUNT_TABLE = "CREATE TABLE " + TABLE_ACCOUNT + "("
                 + COLUMN_ACCOUNT_NO1 + " VARCHAR(6) PRIMARY KEY," + COLUMN_BANK_NAME
-                + " VARCHAR(50)," + COLUMN_ACCOUNT_HOLDER_NAME + " VARCHAR(100)," + COLUMN_BALANCE + " DOUBLE"+ ")";
+                + " VARCHAR(50)," + COLUMN_ACCOUNT_HOLDER_NAME + " VARCHAR(100)," + COLUMN_BALANCE + " DOUBLE "+ ")";
 
         String CREATE_TRANSACTION_TABLE = "CREATE TABLE " + TABLE_TRANSACTION + "("
                 + COLUMN_ACCOUNT_NO2 + " VARCHAR(6) PRIMARY KEY," + COLUMN_DATE
-                + " DATE," + COLUMN_EXPENSE_TYPE + " VARACHAR(10)" + COLUMN_AMOUNT + " DOUBLE" + " , )";
+                + " DATE," + COLUMN_EXPENSE_TYPE + " VARACHAR(10)" + COLUMN_AMOUNT + " DOUBLE " + " , FOREIGN KEY( " + COLUMN_ACCOUNT_NO2 + " REFERENCES "+ DATABASE_NAME+"."+TABLE_ACCOUNT+"("+COLUMN_ACCOUNT_NO1+")"+")";
 
         //execute table creation sql queries
         db.execSQL(CREATE_ACCOUNT_TABLE);
@@ -66,6 +66,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
     public  SQLiteDatabase getWritableDatabase(){
         return this.getWritableDatabase();
     }
+
 
 
 }
