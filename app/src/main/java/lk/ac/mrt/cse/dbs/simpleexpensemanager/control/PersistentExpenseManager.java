@@ -22,17 +22,19 @@ import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.AccountDAO;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.TransactionDAO;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.database_access.DatabaseAccountDAO;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.database_access.DatabaseTransactionDAO;
-import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.Account;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.database.MyDBHandler;
 
 /**
  *
  */
+/*************Implement the setup() method of the abstract class*********************/
 public class PersistentExpenseManager extends ExpenseManager {
 
+    //-------------------------------------------------------variables-----------------------------------------------------------//
     private Context context = null;
     private MyDBHandler dbHandler = null;
 
+    //-------------------------------------------------------Methods-----------------------------------------------------------//
     public PersistentExpenseManager(Context context) {
         this.context = context;
         dbHandler = MyDBHandler.getInstance(context);
@@ -42,16 +44,13 @@ public class PersistentExpenseManager extends ExpenseManager {
     @Override
     public void setup() {
 
+        //create environment for transaction
         TransactionDAO dbMemoryTransactionDAO = new DatabaseTransactionDAO(dbHandler);
         setTransactionsDAO(dbMemoryTransactionDAO);
 
+        //create environment for account
         AccountDAO dbMemoryAccountDAO = new DatabaseAccountDAO(dbHandler);
         setAccountsDAO(dbMemoryAccountDAO);
-
-        Account dummyAcct1 = new Account("12345A", "Yoda Bank", "Anakin Skywalker", 10000.0);
-        Account dummyAcct2 = new Account("78945Z", "Clone BC", "Obi-Wan Kenobi", 80000.0);
-        getAccountsDAO().addAccount(dummyAcct1);
-        getAccountsDAO().addAccount(dummyAcct2);
 
     }
 }
