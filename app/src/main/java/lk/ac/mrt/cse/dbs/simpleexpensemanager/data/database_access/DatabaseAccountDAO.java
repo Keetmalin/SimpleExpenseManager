@@ -1,8 +1,10 @@
 package lk.ac.mrt.cse.dbs.simpleexpensemanager.data.database_access;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.AccountDAO;
@@ -24,13 +26,14 @@ public class DatabaseAccountDAO implements AccountDAO {
     }
     @Override
     public List<String> getAccountNumbersList() {
-        return null;
+        List<String> transactionsList =  new LinkedList<>();
+        return transactionsList;
     }
 
     @Override
     public List<Account> getAccountsList() {
-
-        return null;
+        List<Account> transactionsList =  new LinkedList<>();
+        return transactionsList;
     }
 
     @Override
@@ -54,11 +57,29 @@ public class DatabaseAccountDAO implements AccountDAO {
 
     @Override
     public void removeAccount(String accountNo) throws InvalidAccountException {
+        boolean result = false;
+
+        String query = "Select * FROM " + MyDBHandler.TABLE_ACCOUNT + " WHERE " + MyDBHandler.COLUMN_ACCOUNT_NO1 + " =  \"" + accountNo + "\"";
+
+        SQLiteDatabase db = dbHandler.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(query, null);
+
+
+        if (cursor.moveToFirst()) {
+           String accountNumber = (cursor.getString(0));
+            db.delete(MyDBHandler.TABLE_ACCOUNT,  MyDBHandler.COLUMN_ACCOUNT_NO1 + " = ?",
+                    new String[] { accountNumber });
+            cursor.close();
+            result = true;
+        }
+        db.close();
 
     }
 
     @Override
     public void updateBalance(String accountNo, ExpenseType expenseType, double amount) throws InvalidAccountException {
+
 
     }
 }

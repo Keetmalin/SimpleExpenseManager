@@ -18,7 +18,7 @@ import lk.ac.mrt.cse.dbs.simpleexpensemanager.database.MyDBHandler;
 /**
  * Created by KeetMalin on 12/4/2015.
  */
-public class DatabaseTransactionDAO implements TransactionDAO{
+public class DatabaseTransactionDAO implements TransactionDAO {
 
     MyDBHandler dbHandler = null;
 
