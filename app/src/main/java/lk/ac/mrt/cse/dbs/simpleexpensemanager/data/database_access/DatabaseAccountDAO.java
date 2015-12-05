@@ -22,64 +22,118 @@ public class DatabaseAccountDAO implements AccountDAO {
 
     public DatabaseAccountDAO(MyDBHandler dbHandler){
         this.dbHandler = dbHandler;
-
     }
+
+
     @Override
     public List<String> getAccountNumbersList() {
-        List<String> transactionsList =  new LinkedList<>();
-        return transactionsList;
-    }
-
-    @Override
-    public List<Account> getAccountsList() {
-        List<Account> transactionsList =  new LinkedList<>();
-        return transactionsList;
-    }
-
-    @Override
-    public Account getAccount(String accountNo) throws InvalidAccountException {
-        return null;
-    }
-
-    @Override
-    public void addAccount(Account account) {
-        ContentValues values = new ContentValues();
-        values.put(MyDBHandler.COLUMN_ACCOUNT_NO1, account.getAccountNo());
-        values.put(MyDBHandler.COLUMN_BANK_NAME , account.getBankName());
-        values.put(MyDBHandler.COLUMN_ACCOUNT_HOLDER_NAME , account.getAccountHolderName());
-        values.put(MyDBHandler.COLUMN_BALANCE, account.getBalance());
-
-        SQLiteDatabase db = dbHandler.getWritableDatabase();
-
-        db.insert(MyDBHandler.TABLE_ACCOUNT, null, values);
-        db.close();
-    }
-
-    @Override
-    public void removeAccount(String accountNo) throws InvalidAccountException {
-        boolean result = false;
-
-        String query = "Select * FROM " + MyDBHandler.TABLE_ACCOUNT + " WHERE " + MyDBHandler.COLUMN_ACCOUNT_NO1 + " =  \"" + accountNo + "\"";
+        String query = "Select * FROM " + MyDBHandler.TABLE_ACCOUNT ;
 
         SQLiteDatabase db = dbHandler.getWritableDatabase();
 
         Cursor cursor = db.rawQuery(query, null);
 
+        List<String> accountsList =  new LinkedList<>();
+        Account account = null;
+
 
         if (cursor.moveToFirst()) {
-           String accountNumber = (cursor.getString(0));
-            db.delete(MyDBHandler.TABLE_ACCOUNT,  MyDBHandler.COLUMN_ACCOUNT_NO1 + " = ?",
-                    new String[] { accountNumber });
-            cursor.close();
-            result = true;
-        }
-        db.close();
+            do{
 
+                account= new Account(cursor.getString(0), cursor.getString(1) , cursor.getString(2), cursor.getDouble(3));
+                accountsList.add(account.getAccountNo());
+            }while (cursor.moveToNext());
+
+        }
+        cursor.close();
+        db.close();
+        return accountsList;
+    }
+
+    @Override
+    public List<Account> getAccountsList() {
+        String query = "Select * FROM " + MyDBHandler.TABLE_ACCOUNT ;
+
+        SQLiteDatabase db = dbHandler.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        List<Account> accountsList =  new LinkedList<>();
+        Account account = null;
+
+
+        if (cursor.moveToFirst()) {
+            do{
+
+                account= new Account(cursor.getString(0), cursor.getString(1) , cursor.getString(2), cursor.getDouble(3));
+                accountsList.add(account);
+            }while (cursor.moveToNext());
+
+        }
+        cursor.close();
+        db.close();
+        return accountsList;
+    }
+
+    @Override
+    public Account getAccount(String accountNo) throws InvalidAccountException {
+        String query = "Select * FROM " + MyDBHandler.TABLE_ACCOUNT + " WHERE " + MyDBHandler.COLUMN_ACCOUNT_NO1
+                + " = " + "'"+accountNo+"'"  ;
+
+        SQLiteDatabase db = dbHandler.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        Account account = null;
+
+
+        if (cursor.moveToFirst()) {
+            account= new Account(cursor.getString(0), cursor.getString(1) , cursor.getString(2), cursor.getDouble(3));
+        }
+
+        cursor.close();
+        db.close();
+        return account;
+    }
+
+    @Override
+    public void addAccount(Account account) {
+        dbHandler.addAccount(account);
+    }
+
+    @Override
+    public void removeAccount(String accountNo) throws InvalidAccountException {
+        dbHandler.removeAccount(accountNo);
     }
 
     @Override
     public void updateBalance(String accountNo, ExpenseType expenseType, double amount) throws InvalidAccountException {
 
+        Account account = getAccount(accountNo);
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(MyDBHandler.COLUMN_ACCOUNT_NO1 , account.getAccountNo());
+        contentValues.put(MyDBHandler.COLUMN_BANK_NAME , account.getBankName());
+        contentValues.put(MyDBHandler.COLUMN_ACCOUNT_HOLDER_NAME , account.getBankName());
+
+        //String query = "";
+
+        if (expenseType == ExpenseType.INCOME){
+
+            contentValues.put(MyDBHandler.COLUMN_BALANCE , account.getBalance()+ amount);
+//            query = "UPDATE " + MyDBHandler.TABLE_ACCOUNT + " SET " + MyDBHandler.COLUMN_AMOUNT
+//                    + " = " + (account.getBalance()+amount) + " WHERE " + MyDBHandler.COLUMN_ACCOUNT_NO1 +
+//                    " = " + accountNo;
+
+        }else if (expenseType == ExpenseType.EXPENSE){
+            contentValues.put(MyDBHandler.COLUMN_BALANCE , account.getBalance()- amount);
+//            query = "UPDATE " + MyDBHandler.TABLE_ACCOUNT + " SET " + MyDBHandler.COLUMN_AMOUNT
+//                    + " = " + (account.getBalance()-amount) + " WHERE " + MyDBHandler.COLUMN_ACCOUNT_NO1 +
+//                    " = " + accountNo;
+        }
+
+        SQLiteDatabase db = dbHandler.getWritableDatabase();
+        db.update(MyDBHandler.TABLE_ACCOUNT , contentValues , MyDBHandler.COLUMN_ACCOUNT_NO1 + " = " + "'"+accountNo+"'" , null);
 
     }
 }

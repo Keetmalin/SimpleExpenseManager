@@ -22,6 +22,7 @@ import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.AccountDAO;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.TransactionDAO;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.database_access.DatabaseAccountDAO;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.database_access.DatabaseTransactionDAO;
+import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.Account;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.database.MyDBHandler;
 
 /**
@@ -34,7 +35,7 @@ public class PersistentExpenseManager extends ExpenseManager {
 
     public PersistentExpenseManager(Context context) {
         this.context = context;
-        dbHandler = new MyDBHandler(context);
+        dbHandler = MyDBHandler.getInstance(context);
         setup();
     }
 
@@ -46,6 +47,11 @@ public class PersistentExpenseManager extends ExpenseManager {
 
         AccountDAO dbMemoryAccountDAO = new DatabaseAccountDAO(dbHandler);
         setAccountsDAO(dbMemoryAccountDAO);
+
+        Account dummyAcct1 = new Account("12345A", "Yoda Bank", "Anakin Skywalker", 10000.0);
+        Account dummyAcct2 = new Account("78945Z", "Clone BC", "Obi-Wan Kenobi", 80000.0);
+        getAccountsDAO().addAccount(dummyAcct1);
+        getAccountsDAO().addAccount(dummyAcct2);
 
     }
 }

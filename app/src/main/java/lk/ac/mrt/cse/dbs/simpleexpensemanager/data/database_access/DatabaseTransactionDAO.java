@@ -30,8 +30,12 @@ public class DatabaseTransactionDAO implements TransactionDAO {
     public void logTransaction(Date date, String accountNo, ExpenseType expenseType, double amount) {
         Transaction transaction = new Transaction(date, accountNo, expenseType, amount);
         ContentValues values = new ContentValues();
+
         values.put(MyDBHandler.COLUMN_ACCOUNT_NO2, accountNo);
-        values.put(MyDBHandler.COLUMN_DATE , date.toString());
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        String formattedDate = sdf.format(date);
+
+        values.put(MyDBHandler.COLUMN_DATE , formattedDate);
         values.put(MyDBHandler.COLUMN_EXPENSE_TYPE , expenseType.toString());
         values.put(MyDBHandler.COLUMN_AMOUNT, amount);
 
@@ -59,7 +63,7 @@ public class DatabaseTransactionDAO implements TransactionDAO {
             do{
                 Date date = null;
                 String dateString = cursor.getString(0);
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
                 try {
                     date = simpleDateFormat.parse(dateString);
                 } catch (ParseException e) {
@@ -77,7 +81,7 @@ public class DatabaseTransactionDAO implements TransactionDAO {
 
     @Override
     public List<Transaction> getPaginatedTransactionLogs(int limit) {
-        String query = "Select * FROM " + MyDBHandler.TABLE_TRANSACTION + " ORDER BY " + MyDBHandler.COLUMN_DATE + " ASC LIMIT " + limit;
+        String query = "Select * FROM " + MyDBHandler.TABLE_TRANSACTION + " ORDER BY " + MyDBHandler.COLUMN_DATE + " LIMIT " + limit;
 
         SQLiteDatabase db = dbHandler.getWritableDatabase();
 
@@ -91,14 +95,14 @@ public class DatabaseTransactionDAO implements TransactionDAO {
         if (cursor.moveToFirst()) {
             do{
                 Date date = null;
-                String dateString = cursor.getString(0);
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                String dateString = cursor.getString(1);
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
                 try {
                     date = simpleDateFormat.parse(dateString);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                transaction= new Transaction(date, cursor.getString(1) , ExpenseType.valueOf(cursor.getString(2)), cursor.getDouble(3));
+                transaction= new Transaction(date, cursor.getString(0) , ExpenseType.valueOf(cursor.getString(2)), cursor.getDouble(3));
                 transactionsList.add(transaction);
             }while (cursor.moveToNext());
 
