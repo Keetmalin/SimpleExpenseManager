@@ -87,9 +87,9 @@ public class DatabaseTransactionDAO implements TransactionDAO {
     @Override
     public List<Transaction> getPaginatedTransactionLogs(int limit) {
 
-        String query = "Select * FROM " + MyDBHandler.TABLE_TRANSACTION + " ORDER BY " + MyDBHandler.COLUMN_DATE + " LIMIT ?" ;
+        String query = "Select * FROM " + MyDBHandler.TABLE_TRANSACTION + " ORDER BY " + MyDBHandler.COLUMN_DATE + " LIMIT " + limit ;
         SQLiteDatabase db = dbHandler.getWritableDatabase();
-        Cursor cursor = db.rawQuery(query, new String[]{"'"+limit+"'"});
+        Cursor cursor = db.rawQuery(query, null);
 
         //create list for Transaction objects
         List<Transaction> transactionsList =  new LinkedList<>();

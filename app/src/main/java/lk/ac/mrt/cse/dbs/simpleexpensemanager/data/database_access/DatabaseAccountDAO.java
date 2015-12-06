@@ -79,11 +79,11 @@ public class DatabaseAccountDAO implements AccountDAO {
 
 
         String query = "Select * FROM " + MyDBHandler.TABLE_ACCOUNT + " WHERE " + MyDBHandler.COLUMN_ACCOUNT_NO
-                + " = ? "  ;
+                + " = " + "'" + accountNo + "'"  ;
         SQLiteDatabase db = dbHandler.getWritableDatabase();
 
         //binding into a prepared statement
-        Cursor cursor = db.rawQuery(query, new String[]{"'" + accountNo + "'"});
+        Cursor cursor = db.rawQuery(query, null);
 
         Account account = null;
 
@@ -115,10 +115,10 @@ public class DatabaseAccountDAO implements AccountDAO {
     @Override
     public void removeAccount(String accountNo) throws InvalidAccountException {
 
-        String query = "Select * FROM " + MyDBHandler.TABLE_ACCOUNT + " WHERE " + MyDBHandler.COLUMN_ACCOUNT_NO + " =  ? ";
+        String query = "Select * FROM " + MyDBHandler.TABLE_ACCOUNT + " WHERE " + MyDBHandler.COLUMN_ACCOUNT_NO + " = " + "'" + accountNo + "'";
 
         SQLiteDatabase db = dbHandler.getWritableDatabase();
-        Cursor cursor = db.rawQuery(query, new String[]{ "'"+accountNo+ "'"});
+        Cursor cursor = db.rawQuery(query, null);
 
         //if the account is available
         if (cursor.moveToFirst()) {
@@ -152,7 +152,9 @@ public class DatabaseAccountDAO implements AccountDAO {
 
         //run the update on database
         SQLiteDatabase db = dbHandler.getWritableDatabase();
-        db.update(MyDBHandler.TABLE_ACCOUNT , contentValues , MyDBHandler.COLUMN_ACCOUNT_NO + " = ? " , new String[]{ "'"+accountNo+ "'"});
+        db.update(MyDBHandler.TABLE_ACCOUNT , contentValues , MyDBHandler.COLUMN_ACCOUNT_NO + " = " + "'" + accountNo + "'" , null);
+
+        //the balance is allowed to be negative, because this could be a credit card or current account or similar kind os account
 
     }
 }
